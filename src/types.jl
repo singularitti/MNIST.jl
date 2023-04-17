@@ -38,9 +38,9 @@ end
 
 Base.eltype(::Network{N}) where {N} = (Int64, Matrix{Float64}, Vector{Float64})
 
-Base.length(::Network{N}) where {N} = N
+Base.length(network::Network) = length(size(network))
 
-Base.size(network::Network) = size(network.layers)
+Base.size(network::Network) = network.layers
 
 function Base.getindex(network::Network, i)
     if i == 1
