@@ -3,7 +3,7 @@ module MNIST
 using ComputedFieldTypes: @computed
 using Random: shuffle
 
-export Network, feedforward, sgd!
+export Network, feedforward, computecost, sgd!
 
 @computed struct Network{N}
     layers::NTuple{N,Int64}
@@ -25,6 +25,11 @@ function feedforward(network::Network, 𝐚)
         𝐚 = w * 𝐚 .+ 𝐛
     end
     return 𝐚
+end
+
+function computecost(network::Network, input, desired_output)
+    output = feedforward(network, input)
+    return sum(abs2, desired_output .- output)
 end
 
 function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
