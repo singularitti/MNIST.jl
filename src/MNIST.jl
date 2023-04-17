@@ -60,4 +60,8 @@ end
 
 function backprop(network::Network, x, y) end
 
+sigmoid(z) = 1 / (1 + exp(-z))
+
+sigmoid′(z) = sigmoid(z) * (1 - sigmoid(z))
+
 end
