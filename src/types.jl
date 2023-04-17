@@ -41,3 +41,17 @@ Base.eltype(::Network{N}) where {N} = (Int64, Matrix{Float64}, Vector{Float64})
 Base.length(::Network{N}) where {N} = N
 
 Base.size(network::Network) = size(network.layers)
+
+function Base.getindex(network::Network, i)
+    if i == 1
+        return first(network.layers),
+        zeros(size(first(network.weights))),
+        zeros(size(first(network.biases)))
+    else
+        return network.layers[i], network.weights[i - 1], network.biases[i - 1]
+    end
+end
+
+Base.firstindex(::Network) = 1
+
+Base.lastindex(network::Network) = length(network)
