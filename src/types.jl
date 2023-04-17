@@ -36,7 +36,7 @@ function Base.iterate(network::Network, state)
     end
 end
 
-Base.eltype(::Network{N}) where {N} = (Int64, Matrix{Float64}, Vector{Float64})
+Base.eltype(::Network) = (Int64, Matrix{Float64}, Vector{Float64})
 
 Base.length(network::Network) = length(size(network))
 
