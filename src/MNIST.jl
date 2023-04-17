@@ -1,8 +1,9 @@
 module MNIST
 
 using ComputedFieldTypes: @computed
+using Random: shuffle
 
-export Network
+export Network, feedforward, sgd!
 
 @computed struct Network{N}
     layers::NTuple{N,Int64}
@@ -18,5 +19,27 @@ function Network(layers)
     return Network{length(layers)}(layers, weights, biases)
 end
 Network(layers::Integer...) = Network(layers)
+
+function feedforward(network::Network, 𝐚)
+    for (w, 𝐛) in (network.weights, network.biases)
+        𝐚 = w * 𝐚 .+ 𝐛
+    end
+    return 𝐚
+end
+
+function sgd!(network::Network, training_data, mini_batch_size, η)
+    training_data = shuffle(training_data)
+    mini_batches = Iterators.partition(training_data, mini_batch_size)
+    for mini_batch in mini_batches
+        update_mini_batch!(network, mini_batch, η)
+    end
+    return network
+end
+function sgd!(network::Network, training_data, epochs, mini_batch_size, η)
+    for _ in 1:epochs
+        sgd!(network, training_data, mini_batch_size, η)
+    end
+    return network
+end
 
 end
