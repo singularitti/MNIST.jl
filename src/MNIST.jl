@@ -2,6 +2,7 @@ module MNIST
 
 using ComputedFieldTypes: @computed
 using Random: shuffle
+using Statistics: mean
 
 export Network, feedforward, computecost, sgd!
 
@@ -42,5 +43,21 @@ function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
     end
     return network
 end
+
+function update_mini_batch!(network::Network, mini_batch, η)
+    networks = map(mini_batch) do (x, y)
+        backprop(network, x, y)  # For all layers
+    end
+    ∇w, ∇b = mean(network.weights for network in networks),
+    mean(network.weights for network in networks)
+    # Update each layer's weights and biases
+    for (wⱼₖ, bⱼ, ∇wⱼₖ, ∇bⱼ) in zip(network.weights, network.biases, ∇w, ∇b)
+        wⱼₖ[:, :] .-= η * ∇wⱼₖ
+        bⱼ[:] .-= η * ∇bⱼ
+    end
+    return network
+end
+
+function backprop(network::Network, x, y) end
 
 end
