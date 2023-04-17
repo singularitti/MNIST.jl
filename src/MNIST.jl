@@ -27,17 +27,13 @@ function feedforward(network::Network, 𝐚)
     return 𝐚
 end
 
-function sgd!(network::Network, training_data, mini_batch_size, η)
-    training_data = shuffle(training_data)
-    mini_batches = Iterators.partition(training_data, mini_batch_size)
-    for mini_batch in mini_batches
-        update_mini_batch!(network, mini_batch, η)
-    end
-    return network
-end
-function sgd!(network::Network, training_data, epochs, mini_batch_size, η)
+function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
     for _ in 1:epochs
-        sgd!(network, training_data, mini_batch_size, η)
+        training_data = shuffle(training_data)
+        mini_batches = Iterators.partition(training_data, mini_batch_size)
+        for mini_batch in mini_batches
+            update_mini_batch!(network, mini_batch, η)
+        end
     end
     return network
 end
