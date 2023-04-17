@@ -55,3 +55,9 @@ end
 Base.firstindex(::Network) = 1
 
 Base.lastindex(network::Network) = length(network)
+
+Base.show(io::IO, network::Network) = print(io, join(size(network), "×"), " network")
+function Base.show(io::IO, ::MIME"text/plain", network::Network)
+    println(io, "Network of size ", join(size(network), "×"))
+    return nothing
+end
