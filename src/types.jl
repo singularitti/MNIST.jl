@@ -17,9 +17,9 @@ function Network(layers)
 end
 Network(layers::Integer...) = Network(layers)
 
-function (network::Network)(f, 𝐱, 𝐲)
-    out = feedforward(network, f, 𝐱)
-    return sum(abs2, 𝐲 .- out)
+function (network::Network)(f, 𝘅, 𝘆)
+    𝘆̂ = feedforward(network, f, 𝘅)
+    return sum(abs2, 𝘆 .- 𝘆̂)
 end
 
 function feedforward(f, weights, biases, 𝗮)
