@@ -18,7 +18,7 @@ end
 Network(layers::Integer...) = Network(layers)
 
 function (network::Network)(f, 𝘅, 𝘆)
-    𝘆̂ = feedforward(network, f, 𝘅)
+    𝘆̂ = feedforward(f, network.weights, network.biases, 𝘅)
     return sum(abs2, 𝘆 .- 𝘆̂)
 end
 
@@ -28,7 +28,6 @@ function feedforward(f, weights, biases, 𝗮)
     end
     return 𝗮
 end
-feedforward(network::Network, f, 𝘅) = feedforward(f, network.weights, network.biases, 𝘅)
 
 Base.iterate(network::Network) = (
     (
