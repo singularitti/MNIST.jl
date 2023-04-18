@@ -1,0 +1,30 @@
+\documentclass{standalone}
+
+\usepackage{neuralnetwork}% See https://tex.stackexchange.com/a/464473
+\usetikzlibrary{positioning}% See https://tex.stackexchange.com/a/514978
+
+\newcommand{\y}[2]{$a^L_#2$}
+\newcommand{\hnext}[2]{\small $a^{L-2}_#2$}
+\newcommand{\hlast}[2]{\small $a^{L-1}_#2$}
+\newcommand{\wjlL}[4]{\,{$\scriptscriptstyle w^L_{#4#2}$}\,}
+
+\tikzset{
+    arrow/.style={->, thin, draw=black!45},
+}
+
+\begin{document}
+
+\begin{neuralnetwork}[height=5, nodesize=24pt]
+    \hiddenlayer[count=4, bias=false, title=$(L-2)$\textsuperscript{th}, text=\hnext]
+    \hiddenlayer[count=3, bias=false, title=$(L-1)$\textsuperscript{th}, text=\hlast] \linklayers[title=$w_{jk}^{L-1}$]
+    \outputlayer[count=2, title=out ($L$\textsuperscript{th}), text=\y] \linklayers[title=$w_{jk}^L$]
+    \link[style={red!50}, labelpos=near end, from layer=1, from node=2, to layer=2, to node=1, label=\wjlL]
+    \link[style={red!50}, labelpos=near end, from layer=1, from node=2, to layer=2, to node=2, label=\wjlL]
+    \node[neuron, fill=yellow!50, minimum size=24pt] at (L1-2) {\small $a^{L-1}_2$};
+    \node[right=0.5cm of L2-1] (y1) {$\frac{ 1 }{ 2 }(a^L_1 - y_1)^2$};
+    \node[right=0.5cm of L2-2] (y2) {$\frac{ 1 }{ 2 }(a^L_2 - y_2)^2$};
+    \draw[arrow](L2-1) edge (y1);
+    \draw[arrow](L2-2) edge (y2);
+\end{neuralnetwork}
+
+\end{document}
