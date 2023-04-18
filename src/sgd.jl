@@ -1,19 +1,7 @@
 using Random: shuffle
 using Statistics: mean
 
-export feedforward, computecost, sgd!
-
-function feedforward(network::Network, 𝐚)
-    for (w, 𝐛) in (network.weights, network.biases)
-        𝐚 = w * 𝐚 .+ 𝐛
-    end
-    return 𝐚
-end
-
-function computecost(network::Network, input, desired_output)
-    output = feedforward(network, input)
-    return sum(abs2, desired_output .- output)
-end
+export sgd!
 
 function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
     for _ in 1:epochs
