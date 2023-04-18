@@ -1,6 +1,6 @@
 using ComputedFieldTypes: @computed
 
-export Network, feedforward, computecost
+export Network, feedforward
 
 @computed struct Network{N}
     layers::NTuple{N,Int64}
@@ -17,8 +17,9 @@ function Network(layers)
 end
 Network(layers::Integer...) = Network(layers)
 
-function (network::Network)(input, desired_output)
-    return computecost(network, input, desired_output)
+function (network::Network)(f, 𝐱, 𝐲)
+    out = feedforward(network, f, 𝐱)
+    return sum(abs2, 𝐲 .- out)
 end
 
 function feedforward(network::Network, f, 𝐚)
@@ -26,11 +27,6 @@ function feedforward(network::Network, f, 𝐚)
         𝐚 = f.(w * 𝐚 .+ 𝐛)
     end
     return 𝐚
-end
-
-function computecost(network::Network, input, desired_output)
-    output = feedforward(network, input)
-    return sum(abs2, desired_output .- output)
 end
 
 Base.iterate(network::Network) = (
