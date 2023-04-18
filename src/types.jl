@@ -22,12 +22,13 @@ function (network::Network)(f, 𝐱, 𝐲)
     return sum(abs2, 𝐲 .- out)
 end
 
-function feedforward(network::Network, f, 𝐚)
-    for (w, 𝐛) in (network.weights, network.biases)
-        𝐚 = f.(w * 𝐚 .+ 𝐛)
+function feedforward(f, weights, biases, 𝗮)
+    for (w, 𝗯) in zip(weights, biases)
+        𝗮 = f.(w * 𝗮 .+ 𝗯)
     end
-    return 𝐚
+    return 𝗮
 end
+feedforward(network::Network, f, 𝘅) = feedforward(f, network.weights, network.biases, 𝘅)
 
 Base.iterate(network::Network) = (
     (
