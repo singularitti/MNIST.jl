@@ -21,9 +21,9 @@ function (network::Network)(input, desired_output)
     return computecost(network, input, desired_output)
 end
 
-function feedforward(network::Network, 𝐚)
+function feedforward(network::Network, f, 𝐚)
     for (w, 𝐛) in (network.weights, network.biases)
-        𝐚 = w * 𝐚 .+ 𝐛
+        𝐚 = f.(w * 𝐚 .+ 𝐛)
     end
     return 𝐚
 end
