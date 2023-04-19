@@ -60,17 +60,17 @@ Base.length(iter::EachLayer) = length(size(iter))
 Base.size(iter::EachLayer) = iter.network.layers
 Base.size(iter::EachLayer, dim) = size(iter)[dim]
 
-function Base.getindex(network::Network, i)
+function Base.getindex(X::EachLayer, i)
     if i == 1
-        return first(network.layers), nothing, nothing
+        return first(X.network.layers), nothing, nothing
     else
-        return network.layers[i], network.weights[i - 1], network.biases[i - 1]
+        return X.network.layers[i], X.network.weights[i - 1], X.network.biases[i - 1]
     end
 end
 
-Base.firstindex(::Network) = 1
+Base.firstindex(::EachLayer) = 1
 
-Base.lastindex(network::Network) = length(network)
+Base.lastindex(X::EachLayer) = length(X)
 
 Base.show(io::IO, network::Network) = print(io, join(size(network), "×"), " network")
 function Base.show(io::IO, ::MIME"text/plain", network::Network)
