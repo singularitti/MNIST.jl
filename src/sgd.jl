@@ -1,5 +1,4 @@
 using Random: shuffle
-using Statistics: mean
 
 export sgd!
 
@@ -15,15 +14,17 @@ function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
 end
 
 function update_mini_batch!(network::Network, mini_batch, η)
-    networks = map(mini_batch) do (x, y)
-        backprop(network, x, y)  # For all layers
+    𝝯w, 𝝯𝗯 = similar(collect(network.weights)), similar(collect(network.biases))
+    for (x, y) in mini_batch
+        𝝯wⁱ, 𝝯𝗯ⁱ = Backpropagator(sigmoid, sigmoid′)(network, x, y)
+        𝝯w .+= 𝝯wⁱ
+        𝝯𝗯 .+= 𝝯𝗯ⁱ
     end
-    ∇w, ∇b = mean(network.weights for network in networks),
-    mean(network.weights for network in networks)
+    η′ = η / length(mini_batch)
     # Update each layer's weights and biases
-    for (wⱼₖ, bⱼ, ∇wⱼₖ, ∇bⱼ) in zip(network.weights, network.biases, ∇w, ∇b)
-        wⱼₖ[:, :] .-= η * ∇wⱼₖ
-        bⱼ[:] .-= η * ∇bⱼ
+    for (wⱼₖ, bⱼ, ∇wⱼₖ, ∇bⱼ) in zip(network.weights, network.biases, 𝝯w, 𝝯𝗯)
+        wⱼₖ[:, :] .-= η′ * ∇wⱼₖ
+        bⱼ[:] .-= η′ * ∇bⱼ
     end
     return network
 end
