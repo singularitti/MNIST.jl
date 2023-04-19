@@ -1,6 +1,6 @@
 using ComputedFieldTypes: @computed
 
-export Network, feedforward
+export Network, feedforward, eachlayer
 
 const Maybe{T} = Union{T,Nothing}
 
@@ -31,40 +31,50 @@ function feedforward(f, weights, biases, 𝗮)
     return 𝗮
 end
 
+struct EachLayer{N}
+    network::N
+end
+
+eachlayer(network::Network) = EachLayer(network)
+
 # See https://github.com/JuliaLang/julia/blob/1715110/base/strings/string.jl#L207-L213
-function Base.iterate(network::Network, state=firstindex(network))
+function Base.iterate(iter::EachLayer, state=firstindex(iter))
     if state == 1
-        return ((first(network.layers), nothing, nothing), 2)
-    elseif state >= length(network)
+        return (first(iter.network.layers), nothing, nothing), 2
+    elseif state >= length(iter)
         return nothing
     else
         return (
-            (network.layers[state], network.weights[state - 1], network.biases[state - 1]),  # Note the index here!
-            state + 1,
-        )
+            iter.network.layers[state],
+            iter.network.weights[state - 1],  # Note the index here!
+            iter.network.biases[state - 1],  # Note the index here!
+        ),
+        state + 1
     end
 end
 
-Base.eltype(::Network) = (Int64, Maybe{Matrix{Float64}}, Maybe{Vector{Float64}})
+Base.eltype(::EachLayer) = (Int64, Maybe{Matrix{Float64}}, Maybe{Vector{Float64}})
 
-Base.length(network::Network) = length(size(network))
+Base.length(iter::EachLayer) = length(size(iter))
 
-Base.size(network::Network) = network.layers
+Base.size(iter::EachLayer) = iter.network.layers
+Base.size(iter::EachLayer, dim) = size(iter)[dim]
 
-function Base.getindex(network::Network, i)
+function Base.getindex(X::EachLayer, i)
     if i == 1
-        return first(network.layers), nothing, nothing
+        return first(X.network.layers), nothing, nothing
     else
-        return network.layers[i], network.weights[i - 1], network.biases[i - 1]
+        return X.network.layers[i], X.network.weights[i - 1], X.network.biases[i - 1]
     end
 end
 
-Base.firstindex(::Network) = 1
+Base.firstindex(::EachLayer) = 1
 
-Base.lastindex(network::Network) = length(network)
+Base.lastindex(X::EachLayer) = length(X)
 
-Base.show(io::IO, network::Network) = print(io, join(size(network), "×"), " network")
+Base.show(io::IO, network::Network) = print(io, join(network.layers, "×"), " network")
+Base.show(io::IO, iter::EachLayer) = print(io, summary(iter))
 function Base.show(io::IO, ::MIME"text/plain", network::Network)
-    print(io, "Network of size ", join(size(network), "×"))
+    print(io, "Network of size ", join(network.layers, "×"))
     return nothing
 end
