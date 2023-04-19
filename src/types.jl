@@ -2,6 +2,8 @@ using ComputedFieldTypes: @computed
 
 export Network, feedforward
 
+const Maybe{T} = Union{T,Nothing}
+
 @computed struct Network{N}
     layers::NTuple{N,Int64}
     weights::NTuple{N - 1,Matrix{Float64}}
@@ -29,14 +31,7 @@ function feedforward(f, weights, biases, 𝗮)
     return 𝗮
 end
 
-Base.iterate(network::Network) = (
-    (
-        first(network.layers),
-        zeros(size(first(network.weights))),
-        zeros(size(first(network.biases))),
-    ),
-    1,
-)
+Base.iterate(network::Network) = ((first(network.layers), nothing, nothing), 1)
 function Base.iterate(network::Network, state)
     if state >= length(network)
         return nothing
@@ -48,7 +43,7 @@ function Base.iterate(network::Network, state)
     end
 end
 
-Base.eltype(::Network) = (Int64, Matrix{Float64}, Vector{Float64})
+Base.eltype(::Network) = (Int64, Maybe{Matrix{Float64}}, Maybe{Vector{Float64}})
 
 Base.length(network::Network) = length(size(network))
 
