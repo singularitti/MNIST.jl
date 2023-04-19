@@ -72,8 +72,9 @@ Base.firstindex(::EachLayer) = 1
 
 Base.lastindex(X::EachLayer) = length(X)
 
-Base.show(io::IO, network::Network) = print(io, join(size(network), "×"), " network")
+Base.show(io::IO, network::Network) = print(io, join(network.layers, "×"), " network")
+Base.show(io::IO, iter::EachLayer) = print(io, summary(iter))
 function Base.show(io::IO, ::MIME"text/plain", network::Network)
-    print(io, "Network of size ", join(size(network), "×"))
+    print(io, "Network of size ", join(network.layers, "×"))
     return nothing
 end
