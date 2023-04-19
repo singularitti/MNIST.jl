@@ -41,7 +41,7 @@ eachlayer(network::Network) = EachLayer(network)
 function Base.iterate(iter::EachLayer, state=firstindex(iter))
     if state == 1
         return (first(iter.network.layers), nothing, nothing), 2
-    elseif state >= length(iter)
+    elseif state > length(iter)
         return nothing
     else
         return (
