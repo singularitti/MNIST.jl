@@ -38,24 +38,27 @@ end
 eachlayer(network::Network) = EachLayer(network)
 
 # See https://github.com/JuliaLang/julia/blob/1715110/base/strings/string.jl#L207-L213
-function Base.iterate(network::Network, state=firstindex(network))
+function Base.iterate(iter::EachLayer, state=firstindex(iter))
     if state == 1
-        return ((first(network.layers), nothing, nothing), 2)
-    elseif state >= length(network)
+        return (first(iter.network.layers), nothing, nothing), 2
+    elseif state >= length(iter)
         return nothing
     else
         return (
-            (network.layers[state], network.weights[state - 1], network.biases[state - 1]),  # Note the index here!
-            state + 1,
-        )
+            iter.network.layers[state],
+            iter.network.weights[state - 1],  # Note the index here!
+            iter.network.biases[state - 1],  # Note the index here!
+        ),
+        state + 1
     end
 end
 
-Base.eltype(::Network) = (Int64, Maybe{Matrix{Float64}}, Maybe{Vector{Float64}})
+Base.eltype(::EachLayer) = (Int64, Maybe{Matrix{Float64}}, Maybe{Vector{Float64}})
 
-Base.length(network::Network) = length(size(network))
+Base.length(iter::EachLayer) = length(size(iter))
 
-Base.size(network::Network) = network.layers
+Base.size(iter::EachLayer) = iter.network.layers
+Base.size(iter::EachLayer, dim) = size(iter)[dim]
 
 function Base.getindex(network::Network, i)
     if i == 1
