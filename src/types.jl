@@ -51,9 +51,7 @@ Base.size(network::Network) = network.layers
 
 function Base.getindex(network::Network, i)
     if i == 1
-        return first(network.layers),
-        zeros(size(first(network.weights))),
-        zeros(size(first(network.biases)))
+        return first(network.layers), nothing, nothing
     else
         return network.layers[i], network.weights[i - 1], network.biases[i - 1]
     end
