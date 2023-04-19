@@ -31,9 +31,11 @@ function feedforward(f, weights, biases, 𝗮)
     return 𝗮
 end
 
-Base.iterate(network::Network) = ((first(network.layers), nothing, nothing), 1)
-function Base.iterate(network::Network, state)
-    if state >= length(network)
+# See https://github.com/JuliaLang/julia/blob/1715110/base/strings/string.jl#L207-L213
+function Base.iterate(network::Network, state=firstindex(network))
+    if state == 1
+        return ((first(network.layers), nothing, nothing), 2)
+    elseif state >= length(network)
         return nothing
     else
         return (
