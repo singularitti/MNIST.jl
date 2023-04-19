@@ -1,6 +1,6 @@
 using ComputedFieldTypes: @computed
 
-export Network, feedforward
+export Network, feedforward, eachlayer
 
 const Maybe{T} = Union{T,Nothing}
 
@@ -30,6 +30,12 @@ function feedforward(f, weights, biases, 𝗮)
     end
     return 𝗮
 end
+
+struct EachLayer{N}
+    network::N
+end
+
+eachlayer(network::Network) = EachLayer(network)
 
 # See https://github.com/JuliaLang/julia/blob/1715110/base/strings/string.jl#L207-L213
 function Base.iterate(network::Network, state=firstindex(network))
