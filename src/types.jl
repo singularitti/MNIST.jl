@@ -12,9 +12,9 @@ end
 function Network(layers)
     weights = Tuple(
         Matrix{Float64}(undef, nj, nk) for
-        (nj, nk) in zip(layers[2:end], layers[1:(end - 1)])
+        (nj, nk) in zip(layers[(begin + 1):end], layers[begin:(end - 1)])
     )
-    biases = Tuple(Vector{Float64}(undef, nj) for nj in layers[2:end])
+    biases = Tuple(Vector{Float64}(undef, nj) for nj in layers[(begin + 1):end])
     return Network{length(layers)}(layers, weights, biases)
 end
 Network(layers::Integer...) = Network(layers)
@@ -42,8 +42,8 @@ hidden(iter::EachLayer) = (iter[i] for i in (firstindex(iter) + 1):(lastindex(it
 
 # See https://github.com/JuliaLang/julia/blob/1715110/base/strings/string.jl#L207-L213
 function Base.iterate(iter::EachLayer, state=firstindex(iter))
-    if state == 1
-        return (first(iter.network.layers), nothing, nothing), 2
+    if state == firstindex(iter)
+        return (first(iter.network.layers), nothing, nothing), state + 1
     elseif state > length(iter)
         return nothing
     else
@@ -64,7 +64,7 @@ Base.size(iter::EachLayer) = iter.network.layers
 Base.size(iter::EachLayer, dim) = size(iter)[dim]
 
 function Base.getindex(X::EachLayer, i)  # Only works for integers!
-    if i == 1
+    if i == firstindex(X)
         return first(X.network.layers), nothing, nothing
     else
         return X.network.layers[i], X.network.weights[i - 1], X.network.biases[i - 1]
