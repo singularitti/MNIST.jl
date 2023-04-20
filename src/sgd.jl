@@ -14,11 +14,14 @@ function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
 end
 
 function update_mini_batch!(network::Network, mini_batch, η)
-    𝝯w, 𝝯𝗯 = similar(collect(network.weights)), similar(collect(network.biases))
+    𝝯w, 𝝯𝗯 = collect(zeros(size(weights)) for weights in network.weights),
+    collect(zeros(size(biases)) for biases in network.biases)
     for (x, y) in mini_batch
         𝝯wⁱ, 𝝯𝗯ⁱ = Backpropagator(sigmoid, sigmoid′)(network, x, y)
-        𝝯w .+= 𝝯wⁱ
-        𝝯𝗯 .+= 𝝯𝗯ⁱ
+        for j in eachindex(𝝯w)
+            𝝯w[j][:, :] .+= 𝝯wⁱ[j]
+            𝝯𝗯[j][:] .+= 𝝯𝗯ⁱ[j]
+        end
     end
     η′ = η / length(mini_batch)
     # Update each layer's weights and biases
