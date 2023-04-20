@@ -2,18 +2,18 @@ using Random: shuffle
 
 export train!
 
-function train!(network::Network, data, batch_size, η, nepochs=1)
+function train!(network::Network, data, batchsize, η, nepochs=1)
     for _ in 1:nepochs
-        training_data = shuffle(data)
-        mini_batches = Iterators.partition(training_data, batch_size)
-        for mini_batch in mini_batches
-            update_mini_batch!(network, mini_batch, η)
+        data = shuffle(data)
+        batches = Iterators.partition(data, batchsize)
+        for batch in batches
+            trainbybatch!(network, batch, η)
         end
     end
     return network
 end
 
-function update_mini_batch!(network::Network, batch, η)
+function trainbybatch!(network::Network, batch, η)
     𝝯w, 𝝯𝗯 = collect(zeros(size(weights)) for weights in network.weights),
     collect(zeros(size(biases)) for biases in network.biases)
     for (x, y) in batch
