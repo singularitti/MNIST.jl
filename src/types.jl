@@ -11,10 +11,9 @@ const Maybe{T} = Union{T,Nothing}
 end
 function Network(layers)
     weights = Tuple(
-        Matrix{Float64}(undef, nj, nk) for
-        (nj, nk) in zip(layers[(begin + 1):end], layers[begin:(end - 1)])
-    )
-    biases = Tuple(Vector{Float64}(undef, nj) for nj in layers[(begin + 1):end])
+        rand(nj, nk) for (nj, nk) in zip(layers[(begin + 1):end], layers[begin:(end - 1)])
+    )  # Cannot use `undef` here!
+    biases = Tuple(rand(nj) for nj in layers[(begin + 1):end])  # Cannot use `undef` here!
     return Network{length(layers)}(layers, weights, biases)
 end
 Network(layers::Integer...) = Network(layers)
