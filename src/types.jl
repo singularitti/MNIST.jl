@@ -23,6 +23,7 @@ function Network(layers)
 end
 Network(layers::Integer...) = Network(layers)
 
+(network::Network)(f, data::Example) = network(f, data.x, data.y)
 (network::Network)(f, 𝘅) = feedforward(f, network.weights, network.biases, 𝘅)
 function (network::Network)(f, 𝘅, 𝘆)
     𝘆̂ = network(f, 𝘅)
