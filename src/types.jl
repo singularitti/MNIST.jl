@@ -4,6 +4,11 @@ export Network, feedforward, eachlayer, hidden, excludeinput
 
 const Maybe{T} = Union{T,Nothing}
 
+struct Example
+    x::Vector{Float64}
+    y::Vector{Float64}
+end
+
 @computed struct Network{N}
     layers::NTuple{N,Int64}
     weights::NTuple{N - 1,Matrix{Float64}}
@@ -18,6 +23,7 @@ function Network(layers)
 end
 Network(layers::Integer...) = Network(layers)
 
+(network::Network)(f, data::Example) = network(f, data.x, data.y)
 (network::Network)(f, 𝘅) = feedforward(f, network.weights, network.biases, 𝘅)
 function (network::Network)(f, 𝘅, 𝘆)
     𝘆̂ = network(f, 𝘅)
