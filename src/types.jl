@@ -1,6 +1,6 @@
 using ComputedFieldTypes: @computed
 
-export Network, feedforward, eachlayer, hidden
+export Network, feedforward, eachlayer, hidden, excludeinput
 
 const Maybe{T} = Union{T,Nothing}
 
@@ -38,6 +38,8 @@ end
 eachlayer(network::Network) = EachLayer(network)
 
 hidden(iter::EachLayer) = (iter[i] for i in (firstindex(iter) + 1):(lastindex(iter) - 1))
+
+excludeinput(iter::EachLayer) = (iter[i] for i in (firstindex(iter) + 1):lastindex(iter))
 
 # See https://github.com/JuliaLang/julia/blob/1715110/base/strings/string.jl#L207-L213
 function Base.iterate(iter::EachLayer, state=firstindex(iter))
