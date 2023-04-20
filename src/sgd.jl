@@ -1,8 +1,8 @@
 using Random: shuffle
 
-export sgd!
+export train!
 
-function sgd!(network::Network, training_data, mini_batch_size, η, epochs=1)
+function train!(network::Network, training_data, mini_batch_size, η, epochs=1)
     for _ in 1:epochs
         training_data = shuffle(training_data)
         mini_batches = Iterators.partition(training_data, mini_batch_size)
