@@ -15,10 +15,14 @@ function train!(
     return network
 end
 function train!(network::Network, batch::AbstractVector{Example}, η)
-    η′ = η / length(batch)
-    # Update each layer's weights and biases
-    for example in batch
-        train!(network, example, η′)
+    batchsize = length(batch)
+    new_networks = collect(train(network, example, η / batchsize) for example in batch)
+    new_weights = sum(new_network.weights for new_network in new_networks) / batchsize
+    new_biases = sum(new_network.biases for new_network in new_networks) / batchsize
+    for (weight, bias, new_weight, new_bias) in
+        zip(network.weights, network.biases, new_weights, new_biases)
+        weight[:] = new_weight
+        bias[:] = new_bias
     end
     return network
 end
