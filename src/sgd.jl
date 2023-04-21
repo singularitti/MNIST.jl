@@ -17,12 +17,12 @@ end
 function train!(network::Network, batch::AbstractVector{Example}, η)
     batchsize = length(batch)
     new_networks = collect(train(network, example, η / batchsize) for example in batch)
-    new_weights = sum(new_network.weights for new_network in new_networks) / batchsize
-    new_biases = sum(new_network.biases for new_network in new_networks) / batchsize
+    new_weights = sum(new_network.weights for new_network in new_networks)
+    new_biases = sum(new_network.biases for new_network in new_networks)
     for (weight, bias, new_weight, new_bias) in
         zip(network.weights, network.biases, new_weights, new_biases)
-        weight[:] = new_weight
-        bias[:] = new_bias
+        weight[:] = new_weight / batchsize
+        bias[:] = new_bias / batchsize
     end
     return network
 end
