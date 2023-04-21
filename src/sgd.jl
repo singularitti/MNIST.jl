@@ -30,3 +30,12 @@ function train!(network::Network, example::Example, η)
     end
     return network
 end
+function train(network::Network, example::Example, η)
+    𝝯w, 𝝯𝗯 = Backpropagator(sigmoid, sigmoid′)(network, example)
+    new_network = deepcopy(network)
+    for (w, 𝗯, ∇w, ∇𝗯) in zip(new_network.weights, new_network.biases, 𝝯w, 𝝯𝗯)
+        w[:, :] .-= η * ∇w
+        𝗯[:] .-= η * ∇𝗯
+    end
+    return new_network
+end
