@@ -1,3 +1,4 @@
+using ProgressMeter: @showprogress
 using Random: shuffle
 
 export train!
@@ -5,7 +6,7 @@ export train!
 function train!(
     network::Network, data::AbstractVector{Example}, batchsize::Integer, η, nepochs=1
 )
-    for _ in 1:nepochs
+    @showprogress for _ in 1:nepochs
         data = shuffle(data)
         batches = Iterators.partition(data, batchsize)
         for batch in batches
