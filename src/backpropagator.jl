@@ -6,7 +6,7 @@ struct Backpropagator{F,F′}
     f′::F′
 end
 
-(back::Backpropagator)(example::Example) = back(back.network, example.x, example.y)
+(back::Backpropagator)(example::Example) = back(example.x, example.y)
 function (back::Backpropagator)(𝘅, 𝘆)
     # Feed forward
     zs, activations = Vector{Float64}[], Vector{Float64}[𝘅]
