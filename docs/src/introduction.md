@@ -1,4 +1,4 @@
-# Manual
+# Introduction
 
 This code is an implementation of a neural network for handwritten digit recognition using
 the MNIST database. It is written in the Julia programming language.
