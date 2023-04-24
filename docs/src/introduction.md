@@ -45,7 +45,7 @@ gradient descent with mini-batches.
 3. Train the neural network using the training data.
 
    ```julia
-   train!(network, train_data, batchsize=10, η=3, nepochs=30)
+   train!(network, train_data, 10, 3, 30)
    ```
 
 4. Load the test data.
@@ -82,3 +82,42 @@ gradient descent with mini-batches.
 
 Please refer to the comments in the code for a more detailed explanation of each function
 and data structure.
+
+## Example
+
+Here is one example which shows the accuracy and average loss as a function of
+training epoches:
+
+```@repl 1
+using MNIST: Network, Estimator, sigmoid loaddata, train!
+using Plots
+
+default(;
+    seriestype = :scatter,
+    xlims = (1, 30),
+    xguide = "epoch",
+    tick_direction = :out,
+    legend = :none,
+    grid = nothing,
+    frame = :box,
+    margins = (0, :mm),
+)
+
+network = Network(784, 30, 10)
+train_data = loaddata(:train)
+estimations = map(1:30) do i
+    model = train!(net, xy, 10, 3, 1)
+    Estimator(model, sigmoid)(test)
+end
+plot([estimation.hits for estimation in estimations]; yguide="accuracy")
+savefig("accuracy.svg"); nothing # hide
+```
+
+![](accuracy.svg)
+
+```@repl 1
+plot([estimation.loss for estimation in estimations]; yguide="loss")
+savefig("loss.svg"); nothing # hide
+```
+
+![](loss.svg)
