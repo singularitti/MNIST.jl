@@ -16,14 +16,13 @@ function train!(
     return network
 end
 function train!(network::Network, batch::AbstractVector{Example}, η)
-    batchsize = length(batch)
-    new_networks = collect(train(network, example, η / batchsize) for example in batch)
+    new_networks = collect(train(network, example, η / length(batch)) for example in batch)
     new_weights = (
-        sum(new_network.weights[i] for new_network in new_networks) / batchsize for
+        mean(new_network.weights[i] for new_network in new_networks) for
         i in 1:length(network.weights)
     )
     new_biases = (
-        sum(new_network.biases[i] for new_network in new_networks) / batchsize for
+        mean(new_network.biases[i] for new_network in new_networks) for
         i in 1:length(network.biases)
     )
     for (weight, bias, new_weight, new_bias) in
