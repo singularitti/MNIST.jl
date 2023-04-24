@@ -34,7 +34,7 @@ function train!(network::Network, batch::AbstractVector{Example}, η)
     return network
 end
 function train!(network::Network, example::Example, η)
-    𝝯w, 𝝯𝗯 = Backpropagator(sigmoid, sigmoid′)(network, example)
+    𝝯w, 𝝯𝗯 = Backpropagator(network, sigmoid, sigmoid′)(example)
     for (w, 𝗯, ∇w, ∇𝗯) in zip(network.weights, network.biases, 𝝯w, 𝝯𝗯)
         w[:, :] .-= η * ∇w
         𝗯[:] .-= η * ∇𝗯
@@ -42,7 +42,7 @@ function train!(network::Network, example::Example, η)
     return network
 end
 function train(network::Network, example::Example, η)
-    𝝯w, 𝝯𝗯 = Backpropagator(sigmoid, sigmoid′)(network, example)
+    𝝯w, 𝝯𝗯 = Backpropagator(network, sigmoid, sigmoid′)(example)
     new_network = deepcopy(network)
     for (w, 𝗯, ∇w, ∇𝗯) in zip(new_network.weights, new_network.biases, 𝝯w, 𝝯𝗯)
         w[:, :] .-= η * ∇w
