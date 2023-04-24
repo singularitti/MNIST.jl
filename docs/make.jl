@@ -18,10 +18,8 @@ makedocs(;
         "Home" => "index.md",
         "Manual" => [
             "Installation guide" => "installation.md",
-            "Running" => [
-                "Introduction" => "introduction.md",
-                "Some details" => "details.md",
-            ],
+            "Introduction" => "introduction.md",
+            "Some details" => "details.md",
         ],
         # "API Reference" => "public.md",
         "Developer Docs" => [
