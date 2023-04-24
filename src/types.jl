@@ -1,6 +1,7 @@
 using ComputedFieldTypes: @computed
+using Statistics: mean
 
-export Network, feedforward, eachlayer, hidden, excludeinput
+export Network, Estimator, feedforward, eachlayer, hidden, excludeinput
 
 const Maybe{T} = Union{T,Nothing}
 
@@ -35,6 +36,20 @@ function feedforward(f, weights, biases, 𝗮)
         𝗮 = f.(w * 𝗮 .+ 𝗯)
     end
     return 𝗮
+end
+
+struct Estimator{F}
+    network::Network
+    f::F
+end
+function (estimator::Estimator)(data::AbstractVector{Example})
+    hits =
+        sum(
+            argmax(estimator.network(estimator.f, example.x) - 1) == example.y for
+            example in data
+        ) / length(data)
+    loss = mean(estimator.network(estimator.f, example) for example in data)
+    return (hits=hits, loss=loss)
 end
 
 struct EachLayer{N}
