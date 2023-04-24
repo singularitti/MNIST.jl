@@ -16,6 +16,20 @@ makedocs(;
     ),
     pages=[
         "Home" => "index.md",
+        "Manual" => [
+            "Installation guide" => "installation.md",
+            "Running" => [
+                "Introduction" => "introduction.md",
+                "Some details" => "details.md",
+            ],
+        ],
+        # "API Reference" => "public.md",
+        "Developer Docs" => [
+            "Contributing" => "developers/contributing.md",
+            "Style Guide" => "developers/style-guide.md",
+            "Design Principles" => "developers/design-principles.md",
+        ],
+        "Troubleshooting" => "troubleshooting.md",
     ],
 )
 
