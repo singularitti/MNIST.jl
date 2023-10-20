@@ -23,6 +23,8 @@
 [style-img]: https://img.shields.io/badge/code%20style-blue-4495d1.svg
 [style-url]: https://github.com/invenia/BlueStyle
 
+This repo has moved to [here](https://github.com/singularitti/NeuralNetworks.jl).
+
 Welcome to MNIST.jl, a Julia package designed for recognizing handwritten digits using the
 well-known MNIST dataset. This project aims to provide an efficient and user-friendly
 interface for building, training, and evaluating machine learning models tailored for the
